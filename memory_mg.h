@@ -4,13 +4,20 @@
 
 #include <stddef.h> 
 #include <stdio.h>
+#include <unistd.h>
 
+#define  HEAP_SIZE 0x100000
 
 typedef struct Block{
  int isfree; 
  size_t size; 
  struct Block *next; 
  }Block;
+
+#define BLOCK_HEADER sizeof(Block) 
+
+#define DEBUG_STR(value)  printf("%s\n" , value)
+#define DEBUG_ADDR(value) printf("0x%x\n" , value)
 
 
 #define True  1

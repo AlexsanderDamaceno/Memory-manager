@@ -1,19 +1,27 @@
 #include  "memory_mg.h"
 
-char memory[10000]; 
 
 
-Block *freelist = (Block *)memory; 
+
+Block *freelist = (Block *)NULL; 
 
 
 size_t used_size = 0;
 
 void initialize(){
-	freelist->size = sizeof(memory) - sizeof(Block); 
-	freelist->isfree = True; 
-	freelist->next = NULL; 
-	return; 
+  
+  freelist         = (Block *)sbrk(0); 
+  sbrk(BLOCK_HEADER + HEAP_SIZE);
+	
+  freelist->size   =  HEAP_SIZE; 
+	freelist->isfree =  True; 
+	freelist->next   =  NULL; 
+  return; 
 }
+
+
+
+
 
 void split_block(Block *old_block , size_t size){
     
@@ -46,8 +54,10 @@ Block * find_FreeBlock(size_t new_size){
 
 void *Alloc_block(size_t  size){
     
-      if(freelist->size == 0){
+      if(!freelist){
+          DEBUG_STR("alexsa");
           initialize(); 
+
       }
 
       
@@ -112,8 +122,15 @@ void merge(){
 
 void Free_block(void *ptr){
    
-   
-   if(ptr <= (void*)(memory + sizeof(memory))){
+  if(ptr != NULL)
+  {
+    printf("Null pointer passed\n");
+    return; 
+  }
+
+
+
+   if(ptr   <  sbrk(0)){
    	   ptr -= sizeof(Block);
        Block *free_block = (Block *)ptr; 
    	   free_block->isfree = True; 
@@ -121,15 +138,14 @@ void Free_block(void *ptr){
        merge();
 
    }else{ 
-      printf("Invalid pointer  on free"); 
+      printf("Invalid pointer  on free\n"); 
    }
-
 
 }
 
 
 void heap_usage(){
-   printf("Used bytes in heap: %ld" , used_size); 
+   printf("Used bytes in heap: %ld\n" , used_size); 
    return; 
 }
 

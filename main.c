@@ -15,11 +15,11 @@ int main(){
 
   
  
-  test *a = Alloc_block(1000);
-  test *b = Alloc_block(1000);  
+  test *a = Alloc_block(0x100000);
  
-  Free_block(a);
-  Free_block(b);
+  
+ 
+
 
  
   show_Blocks();
