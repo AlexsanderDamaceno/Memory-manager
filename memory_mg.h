@@ -5,6 +5,7 @@
 #include <stddef.h> 
 #include <stdio.h>
 #include <unistd.h>
+#include <string.h>
 
 #define  HEAP_SIZE 0x100000
 
@@ -14,7 +15,8 @@ typedef struct Block{
  struct Block *next; 
  }Block;
 
-#define BLOCK_HEADER sizeof(Block) 
+#define HEADER_SZ sizeof(Block)
+#define GET_HEADER(Block) ((void*)Block - HEADER_SZ) 
 
 #define DEBUG_STR(value)  printf("%s\n" , value)
 #define DEBUG_ADDR(value) printf("0x%x\n" , value)
@@ -35,7 +37,8 @@ void   Free_block(void *ptr);
 void   merge(); 
 void   heap_usage();
 void   show_Blocks();
-
+void * realloc(void *ptr , size_t size); 
+void * realloc_block(void *ptr , size_t size);
 
 
 #define User_addr(block) (void *)( (void*)block + sizeof(Block)) 

@@ -11,7 +11,7 @@ size_t used_size = 0;
 void initialize(){
   
   freelist         = (Block *)sbrk(0); 
-  sbrk(BLOCK_HEADER + HEAP_SIZE);
+  sbrk(HEADER_SZ + HEAP_SIZE);
 	
   freelist->size   =  HEAP_SIZE; 
 	freelist->isfree =  True; 
@@ -55,7 +55,7 @@ Block * find_FreeBlock(size_t new_size){
 void *Alloc_block(size_t  size){
     
       if(!freelist){
-          DEBUG_STR("alexsa");
+         
           initialize(); 
 
       }
@@ -74,14 +74,16 @@ void *Alloc_block(size_t  size){
       if(F_block->size == size){
        F_block->isfree = False;
        used_size += sizeof(Block) + size; 
+       
      	 return  User_addr(F_block); 
       
       }
 
      // case size < new_size 
+     
       split_block(F_block , size);
       used_size += sizeof(Block) + size; 
-      return  User_addr(F_block);   
+      return User_addr(F_block);   
       
 
 
@@ -122,7 +124,7 @@ void merge(){
 
 void Free_block(void *ptr){
    
-  if(ptr != NULL)
+  if(ptr == NULL)
   {
     printf("Null pointer passed\n");
     return; 
@@ -162,3 +164,42 @@ void show_Blocks(){
    }
   
 }
+
+
+void * realloc_block(void *ptr , size_t size){
+   
+  
+   
+   Block *header = GET_HEADER(ptr);
+
+
+  
+   if(header->size >= size)
+         return User_addr(ptr); 
+
+   if(ptr != NULL && header->size < size){
+       
+       void *new_ptr  = (void *)Alloc_block(size); 
+      
+       if(!new_ptr){
+         printf("Error at realloc\n");
+         return ptr; 
+       } 
+
+       
+       memcpy(new_ptr , ptr , header->size); 
+       Free_block(ptr);
+       return new_ptr; 
+   }
+
+}
+
+
+
+
+
+
+
+
+
+
