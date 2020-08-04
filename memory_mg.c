@@ -10,13 +10,12 @@ size_t used_size = 0;
 
 void initialize(){
   
-  freelist         = (Block *)sbrk(0); 
-  sbrk(HEADER_SZ + HEAP_SIZE);
-	
-  freelist->size   =  HEAP_SIZE; 
-	freelist->isfree =  True; 
-	freelist->next   =  NULL; 
-  return; 
+        freelist         = (Block *)sbrk(0); 
+        sbrk(HEADER_SZ + HEAP_SIZE);
+        freelist->size   =  HEAP_SIZE; 
+        freelist->isfree =  True; 
+        freelist->next   =  NULL; 
+        return; 
 }
 
 
@@ -98,22 +97,23 @@ void merge(){
   struct Block *current_block = freelist; 
 
 	while(current_block != NULL){
-		 if(!Is_free(current_block))
-		 {
-            Next_Block(current_block);
-            continue; 
-		 }
+		
+        if(!Is_free(current_block))
+	  {
+                  Next_Block(current_block);
+                  continue; 
+	  }
 
-		 if(Is_free(current_block) && current_block->next != NULL &&  Is_free(current_block->next)){
-		    
-		    current_block->size += current_block->next->size + sizeof(Block); 
-        current_block->next =  current_block->next->next; 
-        current_block       =  current_block->next->next;
-        continue;
+	if(Is_free(current_block) && current_block->next != NULL &&  Is_free(current_block->next))
+	  {
+		current_block->size += current_block->next->size + sizeof(Block); 
+		current_block->next =  current_block->next->next; 
+		current_block       =  current_block->next->next;
+		continue;
+	  }
 
-		 }
 
-     Next_Block(current_block);
+        Next_Block(current_block);
 
 		 
 
@@ -124,20 +124,20 @@ void merge(){
 
 void Free_block(void *ptr){
    
-  if(ptr == NULL)
-  {
-    printf("Null pointer passed\n");
-    return; 
-  }
+   if(ptr == NULL)
+   {
+   printf("Null pointer passed\n");
+   return; 
+   }
 
 
 
    if(ptr   <  sbrk(0)){
    	   ptr -= sizeof(Block);
-       Block *free_block = (Block *)ptr; 
+	   Block *free_block = (Block *)ptr; 
    	   free_block->isfree = True; 
    	   used_size -= sizeof(Block) + free_block->size; 
-       merge();
+   	   merge();
 
    }else{ 
       printf("Invalid pointer  on free\n"); 
