@@ -31,14 +31,17 @@ typedef struct Block{
 
 void initialize(); 
 
-void * Alloc_block(size_t size);
-void   split_block(Block *old_block , size_t  size); 
-void   Free_block(void *ptr);
-void   merge(); 
-void   heap_usage();
-void   show_Blocks();
-void * realloc(void *ptr , size_t size); 
-void * realloc_block(void *ptr , size_t size);
+void *Alloc_block(size_t size);
+void *realloc(void *ptr , size_t size); 
+void *realloc_block(void *ptr , size_t size);
+void *calloc_block(size_t num  , size_t type_size);
+
+void split_block(Block *old_block , size_t  size); 
+void Free_block(void *ptr);
+void merge(); 
+void heap_usage();
+void show_Blocks();
+
 
 
 #define User_addr(block) (void *)( (void*)block + sizeof(Block)) 

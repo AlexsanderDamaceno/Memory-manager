@@ -15,18 +15,15 @@ int main(){
 
   
  
-  test *a = Alloc_block(sizeof(test));
+  int *a = calloc_block(10 , sizeof(int));
   
   
                 
 
-  a->a = 1000; 
-  a->b = 10;
+
 
   
-  a = (test *)realloc_block(a , sizeof(test)+100);
-
-  printf("%d\n" , (a)->a);
+ 
   
    
 

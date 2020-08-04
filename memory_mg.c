@@ -99,18 +99,18 @@ void merge(){
 	while(current_block != NULL){
 		
         if(!Is_free(current_block))
-	  {
+       	  {
                   Next_Block(current_block);
                   continue; 
-	  }
+	        }
 
-	if(Is_free(current_block) && current_block->next != NULL &&  Is_free(current_block->next))
-	  {
-		current_block->size += current_block->next->size + sizeof(Block); 
-		current_block->next =  current_block->next->next; 
-		current_block       =  current_block->next->next;
-		continue;
-	  }
+	     if(Is_free(current_block) && current_block->next != NULL &&  Is_free(current_block->next))
+	       {
+		        current_block->size += current_block->next->size + sizeof(Block); 
+		        current_block->next =  current_block->next->next; 
+	         	current_block       =  current_block->next->next;
+		        continue;
+         }
 
 
         Next_Block(current_block);
@@ -134,7 +134,7 @@ void Free_block(void *ptr){
 
    if(ptr   <  sbrk(0)){
    	   ptr -= sizeof(Block);
-	   Block *free_block = (Block *)ptr; 
+	     Block *free_block = (Block *)ptr; 
    	   free_block->isfree = True; 
    	   used_size -= sizeof(Block) + free_block->size; 
    	   merge();
@@ -194,6 +194,22 @@ void * realloc_block(void *ptr , size_t size){
 
 }
 
+void  *calloc_block(size_t num  , size_t type_size){
+   
+
+    if(num == 0 || type_size == 0)
+        return NULL; 
+
+    int newsize = type_size*num;
+ 
+
+    void *block = Alloc_block(newsize); 
+    memset(block , 0 , newsize);
+    return block;
+
+
+
+} 
 
 
 
