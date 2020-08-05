@@ -13,7 +13,11 @@ typedef struct Block{
  int isfree; 
  size_t size; 
  struct Block *next; 
+ 
  }Block;
+
+
+#define WORD_SIZE void *
 
 #define HEADER_SZ sizeof(Block)
 #define GET_HEADER(Block) ((void*)Block - HEADER_SZ) 
@@ -31,18 +35,17 @@ typedef struct Block{
 
 void initialize(); 
 
-void *Alloc_block(size_t size);
-void *realloc(void *ptr , size_t size); 
-void *realloc_block(void *ptr , size_t size);
-void *calloc_block(size_t num  , size_t type_size);
-
+void  *Alloc_block(size_t size);
+void  *realloc_block(void *ptr , size_t size);
+void  *calloc_block(size_t num  , size_t type_size);
+Block *verify_cache(size_t size);
 void split_block(Block *old_block , size_t  size); 
 void Free_block(void *ptr);
 void merge(); 
 void heap_usage();
 void show_Blocks();
-
-
+void put_Block_incache(Block *block);
+size_t align(size_t bsize);
 
 #define User_addr(block) (void *)( (void*)block + sizeof(Block)) 
 
